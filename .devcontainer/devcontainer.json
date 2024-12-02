@@ -12,8 +12,5 @@
 			}
 	},
 	"remoteUser": "haskell",
-	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/home/haskell/.ssh,type=bind,readonly"
-	],
 	"postStartCommand": "cabal update"
 }
