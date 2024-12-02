@@ -6,8 +6,8 @@
 			"globalPackages": "hlint hspec pandoc",
 			"installHLS": true,
 			"downgradeGhcToSupportHls": true,
-			"installStack": true,
-			"installStackGHCupHook": true,
+			"installStack": false,
+			"installStackGHCupHook": false,
 			"adjustBash": true
 		},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
