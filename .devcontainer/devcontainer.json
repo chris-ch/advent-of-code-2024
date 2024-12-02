@@ -1,17 +1,19 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/base:debian",
-	"features": {
-		"ghcr.io/devcontainers-contrib/features/haskell:2": {
-			"ghcVersion": "9.8.1",
-			"globalPackages": "hlint hspec pandoc",
-			"installHLS": true,
-			"downgradeGhcToSupportHls": true,
-			"installStack": false,
-			"installStackGHCupHook": false,
-			"adjustBash": true
-		},
-		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-			"packages": "libblas3,liblapack3,liblapack-dev,libblas-dev"
-		}
-	}
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
+	"customizations": {
+			"vscode": {
+					"extensions": [
+						"haskell.haskell",
+						"ms-azuretools.vscode-docker"
+					]
+			}
+	},
+	"remoteUser": "haskell",
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/haskell/.ssh,type=bind,readonly"
+	],
+	"postStartCommand": "cabal update"
 }
