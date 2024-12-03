@@ -5,35 +5,31 @@ import Data.List (sort)
 
 main :: IO ()
 main = do
-    -- Read the file and parse the input into two arrays
-    content <- readFile "input.txt"
-    let (l1, l2) = parseInput content
+    content <- readFile "input2.txt"
+    let rows = parseRows content
+    let diffs = map makeDiff rows
+    let isValidList = map isValid diffs
+    let countValid = length $ filter id isValidList
+    putStrLn $ "Number of valid rows: " ++ show countValid
 
-    -- Sort both arrays
-    let sortedL1 = sort l1
-        sortedL2 = sort l2
-
-    -- Compute the sum of absolute differences
-    let sumAbsDiffs = sum $ zipWith (\v1 v2 -> abs (v1 - v2)) sortedL1 sortedL2
-    putStrLn $ "Sum of absolute differences: " ++ show sumAbsDiffs
-
-    -- Reparse the input for the second computation
-    let (l1', l2') = parseInput content
-
-    -- Compute frequencies of l2'
-    let freqs = frequencyMap l2'
-
-    -- Compute similarity score
-    let similarity = sum $ map (\v -> v * Map.findWithDefault 0 v freqs) l1'
-    putStrLn $ "Similarity score: " ++ show similarity
-
--- Parse the input file into two integer lists
-parseInput :: String -> ([Int], [Int])
-parseInput content =
+parseRows :: String -> [[Int]]
+parseRows content =
     let linesOfFile = lines content
-        numbers = map ((\[v1, v2] -> (read v1, read v2)) . words) linesOfFile
-    in (map fst numbers, map snd numbers)
+    in map (map read . words) linesOfFile
 
--- Create a frequency map from a list of integers
-frequencyMap :: [Int] -> Map.Map Int Int
-frequencyMap = foldr (\v m -> Map.insertWith (+) v 1 m) Map.empty
+isValid :: [Int] -> Bool
+isValid xs = isValidIncreasing xs || isValidDecreasing xs
+
+isValidIncreasing :: [Int] -> Bool
+isValidIncreasing [] = True
+isValidIncreasing (x:xs) = x `elem` [1, 2, 3] && isValidIncreasing xs
+
+isValidDecreasing :: [Int] -> Bool
+isValidDecreasing [] = True
+isValidDecreasing (x:xs) = x `elem` [-1, -2, -3] && isValidDecreasing xs
+
+makeDiff :: [Int] -> [Int]
+makeDiff [] = []
+makeDiff [_] = []
+makeDiff (x:y:ys) = (y - x) : makeDiff ys
+
